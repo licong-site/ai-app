@@ -11,6 +11,8 @@ import {
 
 // 导入API函数
 import { sendMessageToAPI } from '../utils/api';
+// 导入Markdown渲染组件
+import MarkdownRenderer from './MarkdownRenderer';
 
 // UI Components
 const Button: React.FC<ButtonProps> = ({ 
@@ -156,8 +158,17 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
             : 'bg-white/90 backdrop-blur-sm border border-rose-100 text-gray-900'
         }`}
       >
-        <div className="text-sm leading-relaxed whitespace-pre-wrap">
-          {message.content}
+        <div className="text-sm leading-relaxed">
+          {isUser ? (
+            // 用户消息保持原有的显示方式
+            <div className="whitespace-pre-wrap">{message.content}</div>
+          ) : (
+            // AI回复使用Markdown渲染
+            <MarkdownRenderer 
+              content={message.content} 
+              className="ai-message-content"
+            />
+          )}
         </div>
         <div
           className={`text-xs mt-2 ${
@@ -271,7 +282,7 @@ const ChatApp: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: '你好！我是AI助手，有什么可以帮助你的吗？',
+      content: '你好！我是 **AI助手**，基于 DeepSeek 模型为您提供智能对话服务。\n\n我可以帮助您：\n- 回答各种问题\n- 提供代码示例\n- 解释复杂概念\n- 协助文档编写\n\n有什么可以帮助您的吗？',
       role: 'assistant',
       timestamp: new Date()
     }
@@ -353,8 +364,8 @@ const ChatApp: React.FC = () => {
             <Bot className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h1 className="font-semibold text-gray-900">AI Assistant</h1>
-            <p className="text-sm text-rose-600">智能助手，随时为你解答</p>
+            <h1 className="font-semibold text-gray-900">DeepSeek AI Assistant</h1>
+            <p className="text-sm text-rose-600">支持 Markdown 渲染的智能助手</p>
           </div>
         </div>
       </div>
