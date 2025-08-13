@@ -4,7 +4,7 @@ import { APIError, SendMessageRequest, SendMessageResponse } from "../types";
 // 开发环境 vs 生产环境
 const isDevelopment = process.env.NODE_ENV === 'development';
 const API_BASE_URL = isDevelopment 
-  ? 'http://localhost:3000/api'  // 本地开发时的代理路径
+  ? 'https://ai-service.licongcong-ok.workers.dev/'  // 本地开发时的代理路径
   : '/api';                      // 生产环境使用相对路径（同域）
 
 // 备用 API URL（用于调试或回退）
