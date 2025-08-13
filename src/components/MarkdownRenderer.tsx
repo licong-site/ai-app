@@ -49,7 +49,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ children, className, inline = fal
   }
 
   return (
-    <div className="relative group">
+    <div className="relative group my-3">
       {/* 复制按钮 */}
       <button
         onClick={copyToClipboard}
@@ -87,43 +87,58 @@ const components = {
   // 代码块
   code: CodeBlock,
   
-  // 标题样式
+  // 标题样式 - 针对消息场景调整大小
   h1: ({ children, ...props }: any) => (
-    <h1 className="text-xl font-bold text-gray-900 mt-6 mb-4 first:mt-0" {...props}>
+    <h1 className="text-lg font-bold text-gray-900 mt-4 mb-3 first:mt-0" {...props}>
       {children}
     </h1>
   ),
   h2: ({ children, ...props }: any) => (
-    <h2 className="text-lg font-semibold text-gray-900 mt-5 mb-3 first:mt-0" {...props}>
+    <h2 className="text-base font-semibold text-gray-900 mt-3 mb-2 first:mt-0" {...props}>
       {children}
     </h2>
   ),
   h3: ({ children, ...props }: any) => (
-    <h3 className="text-md font-medium text-gray-900 mt-4 mb-2 first:mt-0" {...props}>
+    <h3 className="text-sm font-medium text-gray-900 mt-3 mb-2 first:mt-0" {...props}>
       {children}
     </h3>
   ),
+  h4: ({ children, ...props }: any) => (
+    <h4 className="text-sm font-medium text-gray-800 mt-2 mb-1 first:mt-0" {...props}>
+      {children}
+    </h4>
+  ),
+  h5: ({ children, ...props }: any) => (
+    <h5 className="text-sm font-medium text-gray-800 mt-2 mb-1 first:mt-0" {...props}>
+      {children}
+    </h5>
+  ),
+  h6: ({ children, ...props }: any) => (
+    <h6 className="text-sm font-medium text-gray-800 mt-2 mb-1 first:mt-0" {...props}>
+      {children}
+    </h6>
+  ),
   
-  // 段落样式
+  // 段落样式 - 减少间距
   p: ({ children, ...props }: any) => (
-    <p className="text-gray-700 leading-relaxed mb-3 last:mb-0" {...props}>
+    <p className="text-gray-700 leading-relaxed mb-2 last:mb-0" {...props}>
       {children}
     </p>
   ),
   
-  // 列表样式
+  // 列表样式 - 针对消息场景调整
   ul: ({ children, ...props }: any) => (
-    <ul className="list-disc list-inside space-y-1 mb-3 ml-4" {...props}>
+    <ul className="list-disc list-inside space-y-1 mb-2 ml-3" {...props}>
       {children}
     </ul>
   ),
   ol: ({ children, ...props }: any) => (
-    <ol className="list-decimal list-inside space-y-1 mb-3 ml-4" {...props}>
+    <ol className="list-decimal list-inside space-y-1 mb-2 ml-3" {...props}>
       {children}
     </ol>
   ),
   li: ({ children, ...props }: any) => (
-    <li className="text-gray-700" {...props}>
+    <li className="text-gray-700 text-sm" {...props}>
       {children}
     </li>
   ),
@@ -141,20 +156,20 @@ const components = {
     </a>
   ),
   
-  // 引用块样式
+  // 引用块样式 - 减少内边距
   blockquote: ({ children, ...props }: any) => (
     <blockquote 
-      className="border-l-4 border-rose-300 pl-4 py-2 bg-rose-50 text-gray-700 italic mb-3"
+      className="border-l-4 border-rose-300 pl-3 py-1 bg-rose-50/50 text-gray-700 italic mb-2 text-sm"
       {...props}
     >
       {children}
     </blockquote>
   ),
   
-  // 表格样式
+  // 表格样式 - 适配小尺寸
   table: ({ children, ...props }: any) => (
     <div className="overflow-x-auto mb-3">
-      <table className="min-w-full border-collapse border border-gray-300 rounded-lg" {...props}>
+      <table className="min-w-full border-collapse border border-gray-300 rounded-lg text-sm" {...props}>
         {children}
       </table>
     </div>
@@ -165,19 +180,19 @@ const components = {
     </thead>
   ),
   th: ({ children, ...props }: any) => (
-    <th className="border border-gray-300 px-3 py-2 text-left font-medium text-gray-900" {...props}>
+    <th className="border border-gray-300 px-2 py-1 text-left font-medium text-gray-900 text-xs" {...props}>
       {children}
     </th>
   ),
   td: ({ children, ...props }: any) => (
-    <td className="border border-gray-300 px-3 py-2 text-gray-700" {...props}>
+    <td className="border border-gray-300 px-2 py-1 text-gray-700 text-xs" {...props}>
       {children}
     </td>
   ),
   
   // 分隔线样式
   hr: (props: any) => (
-    <hr className="border-t border-gray-300 my-4" {...props} />
+    <hr className="border-t border-gray-300 my-3" {...props} />
   ),
   
   // 强调样式
@@ -190,6 +205,24 @@ const components = {
     <em className="italic text-gray-700" {...props}>
       {children}
     </em>
+  ),
+  
+  // 删除线
+  del: ({ children, ...props }: any) => (
+    <del className="line-through text-gray-500" {...props}>
+      {children}
+    </del>
+  ),
+  
+  // 任务列表
+  input: ({ checked, ...props }: any) => (
+    <input
+      type="checkbox"
+      checked={checked}
+      readOnly
+      className="mr-2 accent-rose-500"
+      {...props}
+    />
   ),
 };
 
