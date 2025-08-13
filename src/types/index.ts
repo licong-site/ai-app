@@ -38,6 +38,7 @@ export interface ChatAppState {
 export interface APIError extends Error {
   status?: number;
   code?: string;
+  errorType?: string;
 }
 
 export interface SendMessageRequest {

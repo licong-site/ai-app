@@ -8,7 +8,8 @@ import {
   SendMessageRequest,
   SendMessageResponse,
   ButtonSize,
-  ButtonVariant 
+  ButtonVariant, 
+  APIError
 } from '../types';
 
 // 导入API函数
@@ -327,7 +328,7 @@ const ChatApp: React.FC = () => {
         const apiError = error as APIError;
         setError({
           message: apiError.message,
-          type: apiError.errorType
+          type: apiError.errorType || 'UNKNOWN_ERROR'
         });
       } else {
         setError({
@@ -369,7 +370,7 @@ const ChatApp: React.FC = () => {
             {error && (
               <ErrorBanner
                 error={error.message}
-                errorType={error.type}
+                errorType={error.type || 'UNKNOWN_ERROR'}
                 onDismiss={dismissError}
               />
             )}
