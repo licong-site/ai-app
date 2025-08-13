@@ -4,12 +4,10 @@ import {
   Message, 
   ButtonProps, 
   ScrollAreaProps, 
-  APIError,
-  SendMessageRequest,
-  SendMessageResponse,
   ButtonSize,
   ButtonVariant 
 } from '../types';
+import { sendMessage } from '../service';
 
 // UI Components
 const Button: React.FC<ButtonProps> = ({ 
@@ -135,37 +133,8 @@ const ErrorBanner: React.FC<ErrorBannerProps> = ({ error, errorType, onDismiss }
 // API Functions
 const sendMessageToAPI = async (message: string): Promise<string> => {
   try {
-    // TODO: 替换为你的实际API端点
-    const requestBody: SendMessageRequest = {
-      message,
-      // userId: 'optional-user-id',
-      // sessionId: 'optional-session-id'
-    };
-
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        // 'Authorization': 'Bearer YOUR_API_KEY', // 如需要
-      },
-      body: JSON.stringify(requestBody),
-    });
-
-    if (!response.ok) {
-      const error: APIError = new Error(`API请求失败: ${response.status}`);
-      error.status = response.status;
-      throw error;
-    }
-
-    const data: SendMessageResponse = await response.json();
-    
-    if (data.status === 'error') {
-      const apiError: APIError = new Error(data.error || '服务器返回错误');
-      apiError.errorType = data.errorType;
-      throw apiError;
-    }
-    
-    return data.reply;
+    const reply = await sendMessage(message);
+    return reply;
   } catch (error) {
     console.error('API调用失败:', error);
     

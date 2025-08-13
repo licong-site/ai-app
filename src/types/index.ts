@@ -51,4 +51,10 @@ export interface SendMessageResponse {
   status: 'success' | 'error';
   timestamp?: string;
   error?: string;
+  errorType?: string;
+  usage?: {
+    prompt_tokens: number;
+    completion_tokens: number;
+    total_tokens: number;
+  };
 }
