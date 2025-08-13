@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Loader2 } from 'lucide-react';
+import { Send, Bot, User, Loader2, AlertCircle } from 'lucide-react';
 import { 
   Message, 
   ButtonProps, 
@@ -58,6 +58,80 @@ const ScrollArea: React.FC<ScrollAreaProps> = ({ children, className = '' }) => 
   );
 };
 
+// 错误提示组件
+interface ErrorBannerProps {
+  error: string;
+  errorType?: string;
+  onDismiss: () => void;
+}
+
+const ErrorBanner: React.FC<ErrorBannerProps> = ({ error, errorType, onDismiss }) => {
+  const getErrorConfig = (errorType?: string) => {
+    switch (errorType) {
+      case 'INSUFFICIENT_BALANCE':
+        return {
+          title: '余额不足',
+          description: error,
+          action: {
+            text: '前往充值',
+            url: 'https://platform.deepseek.com/usage'
+          },
+          className: 'bg-orange-50 border-orange-200 text-orange-800'
+        };
+      case 'INVALID_API_KEY':
+        return {
+          title: 'API密钥错误',
+          description: error,
+          className: 'bg-red-50 border-red-200 text-red-800'
+        };
+      case 'RATE_LIMIT_EXCEEDED':
+        return {
+          title: '请求过于频繁',
+          description: error,
+          className: 'bg-yellow-50 border-yellow-200 text-yellow-800'
+        };
+      default:
+        return {
+          title: '服务异常',
+          description: error,
+          className: 'bg-red-50 border-red-200 text-red-800'
+        };
+    }
+  };
+
+  const config = getErrorConfig(errorType);
+
+  return (
+    <div className={`border rounded-lg p-4 mb-4 ${config.className}`}>
+      <div className="flex items-start gap-3">
+        <AlertCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
+        <div className="flex-1">
+          <h4 className="font-medium">{config.title}</h4>
+          <p className="text-sm mt-1">{config.description}</p>
+          {config.action && (
+            <div className="mt-2">
+              <a 
+                href={config.action.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm underline hover:no-underline"
+              >
+                {config.action.text}
+              </a>
+            </div>
+          )}
+        </div>
+        <button
+          onClick={onDismiss}
+          className="text-lg leading-none hover:opacity-70"
+        >
+          ×
+        </button>
+      </div>
+    </div>
+  );
+};
+
 // API Functions
 const sendMessageToAPI = async (message: string): Promise<string> => {
   try {
@@ -86,12 +160,19 @@ const sendMessageToAPI = async (message: string): Promise<string> => {
     const data: SendMessageResponse = await response.json();
     
     if (data.status === 'error') {
-      throw new Error(data.error || '服务器返回错误');
+      const apiError: APIError = new Error(data.error || '服务器返回错误');
+      apiError.errorType = data.errorType;
+      throw apiError;
     }
     
     return data.reply;
   } catch (error) {
     console.error('API调用失败:', error);
+    
+    // 如果是 APIError，直接抛出
+    if (error instanceof Error && 'errorType' in error) {
+      throw error;
+    }
     
     // 模拟API调用（演示用）- 生产环境中应该移除
     await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
@@ -254,6 +335,7 @@ const ChatApp: React.FC = () => {
   ]);
   const [inputValue, setInputValue] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<{ message: string; type?: string } | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = (): void => {
@@ -266,6 +348,9 @@ const ChatApp: React.FC = () => {
 
   const handleSendMessage = async (): Promise<void> => {
     if (!inputValue.trim() || isLoading) return;
+
+    // 清除之前的错误
+    setError(null);
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -292,16 +377,28 @@ const ChatApp: React.FC = () => {
     } catch (error) {
       console.error('发送消息失败:', error);
       
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: '抱歉，消息发送失败，请稍后重试。',
-        role: 'assistant',
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, errorMessage]);
+      // 显示错误信息
+      if (error instanceof Error && 'errorType' in error) {
+        const apiError = error as APIError;
+        setError({
+          message: apiError.message,
+          type: apiError.errorType
+        });
+      } else {
+        setError({
+          message: '发送消息失败，请稍后重试。',
+          type: 'UNKNOWN_ERROR'
+        });
+      }
+      
+      // 不添加错误消息到聊天记录，让用户重试
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const dismissError = (): void => {
+    setError(null);
   };
 
   return (
@@ -323,6 +420,15 @@ const ChatApp: React.FC = () => {
       <div className="flex-1 overflow-hidden">
         <ScrollArea className="h-full">
           <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
+            {/* 错误提示 */}
+            {error && (
+              <ErrorBanner
+                error={error.message}
+                errorType={error.type}
+                onDismiss={dismissError}
+              />
+            )}
+
             {messages.map((message) => (
               <MessageBubble key={message.id} message={message} />
             ))}
