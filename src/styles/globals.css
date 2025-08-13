@@ -39,3 +39,121 @@ code {
 ::-webkit-scrollbar-thumb:hover {
   background: #e11d48;
 }
+
+/* Markdown 渲染优化样式 */
+.markdown-content {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* AI 消息中的 Markdown 特殊样式 */
+.ai-message-content {
+  /* 确保代码块在消息气泡中正确显示 */
+}
+
+.ai-message-content pre {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.ai-message-content .markdown-content > *:first-child {
+  margin-top: 0 !important;
+}
+
+.ai-message-content .markdown-content > *:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* 代码块样式增强 */
+.ai-message-content pre[class*="language-"] {
+  margin: 8px 0;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+/* 行内代码优化 */
+.ai-message-content code:not([class*="language-"]) {
+  background-color: rgba(244, 63, 94, 0.1);
+  color: #be185d;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 13px;
+}
+
+/* 表格在消息中的响应式处理 */
+.ai-message-content table {
+  font-size: 12px;
+  margin: 8px 0;
+}
+
+/* 列表项目符号优化 */
+.ai-message-content ul li::marker {
+  color: #f43f5e;
+}
+
+.ai-message-content ol li::marker {
+  color: #f43f5e;
+  font-weight: 600;
+}
+
+/* 引用块样式 */
+.ai-message-content blockquote {
+  border-left-color: #f43f5e;
+  background-color: rgba(244, 63, 94, 0.05);
+}
+
+/* 链接悬停效果 */
+.ai-message-content a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* 标题间距微调 */
+.ai-message-content h1,
+.ai-message-content h2,
+.ai-message-content h3,
+.ai-message-content h4,
+.ai-message-content h5,
+.ai-message-content h6 {
+  line-height: 1.3;
+}
+
+/* 确保长链接不会破坏布局 */
+.ai-message-content a {
+  word-break: break-all;
+}
+
+/* 任务列表样式 */
+.ai-message-content input[type="checkbox"] {
+  margin-right: 6px;
+  transform: scale(0.9);
+}
+
+/* 数学公式样式（如果需要支持） */
+.ai-message-content .math {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+/* 图片响应式 */
+.ai-message-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin: 8px 0;
+}
+
+/* 表格溢出处理 */
+.ai-message-content .table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 代码复制按钮动画 */
+.ai-message-content .group:hover button {
+  transform: translateY(0);
+}
+
+.ai-message-content .group button {
+  transform: translateY(-2px);
+  transition: all 0.2s ease;
+}
