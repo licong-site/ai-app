@@ -59,3 +59,6 @@ export interface SendMessageResponse {
     total_tokens: number;
   };
 }
+
+// 导出 Markdown 相关类型
+export * from './markdown';
