@@ -4,9 +4,6 @@ import {
   Message, 
   ButtonProps, 
   ScrollAreaProps, 
-  APIError,
-  SendMessageRequest,
-  SendMessageResponse,
   ButtonSize,
   ButtonVariant, 
   APIError
