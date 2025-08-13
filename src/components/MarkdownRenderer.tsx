@@ -7,40 +7,52 @@ import remarkBreaks from 'remark-breaks';
 import rehypeRaw from 'rehype-raw';
 import { Copy, Check } from 'lucide-react';
 
-interface MarkdownRendererProps {
-  content: string;
-  className?: string;
-}
+// 导入类型定义
+import {
+  MarkdownRendererProps,
+  CodeProps,
+  HeadingProps,
+  ParagraphProps,
+  ListProps,
+  ListItemProps,
+  LinkProps,
+  BlockquoteProps,
+  TableProps,
+  TableHeadProps,
+  TableCellProps,
+  HrProps,
+  EmphasisProps,
+  StrongProps,
+  DeleteProps,
+  InputProps,
+} from '../types/markdown';
 
-// 代码块组件的类型定义
-interface CodeProps {
-  children?: React.ReactNode;
-  className?: string;
-  inline?: boolean;
-  node?: any;
-}
+// 导入工具函数和自定义 Hook
+import {
+  useMarkdownCopy,
+  detectLanguage,
+  formatCodeContent,
+  isSupportedLanguage,
+  getLanguageDisplayName,
+} from '../utils/markdown';
 
+// 代码块组件
 const CodeBlock: React.FC<CodeProps> = ({ 
   children, 
   className, 
   inline = false, 
   ...props 
 }) => {
-  const [copied, setCopied] = React.useState<boolean>(false);
+  const { copied, copyToClipboard } = useMarkdownCopy();
   
   // 提取语言类型
-  const match = /language-(\w+)/.exec(className || '');
-  const language = match ? match[1] : '';
+  const language = detectLanguage(className);
+  const formattedContent = formatCodeContent(children);
+  const displayName = getLanguageDisplayName(language);
   
   // 复制代码功能
-  const copyToClipboard = async (): Promise<void> => {
-    try {
-      await navigator.clipboard.writeText(String(children));
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('复制失败:', err);
-    }
+  const handleCopy = async (): Promise<void> => {
+    await copyToClipboard(formattedContent);
   };
 
   if (inline) {
@@ -56,12 +68,20 @@ const CodeBlock: React.FC<CodeProps> = ({
 
   return (
     <div className="relative group my-3">
+      {/* 语言标签 */}
+      {language && isSupportedLanguage(language) && (
+        <div className="absolute top-2 left-3 px-2 py-1 bg-gray-600 text-gray-200 text-xs rounded z-10">
+          {displayName}
+        </div>
+      )}
+      
       {/* 复制按钮 */}
       <button
-        onClick={copyToClipboard}
+        onClick={handleCopy}
         className="absolute top-2 right-2 p-1.5 bg-gray-700 hover:bg-gray-600 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10"
         title={copied ? '已复制' : '复制代码'}
         type="button"
+        aria-label={copied ? '代码已复制' : '复制代码到剪贴板'}
       >
         {copied ? (
           <Check className="w-4 h-4 text-green-400" />
@@ -79,100 +99,16 @@ const CodeBlock: React.FC<CodeProps> = ({
           margin: 0,
           borderRadius: '0.375rem',
           fontSize: '0.875rem',
-          lineHeight: '1.5'
+          lineHeight: '1.5',
+          paddingTop: language ? '2.5rem' : '1rem', // 为语言标签留出空间
         }}
         {...props}
       >
-        {String(children).replace(/\n$/, '')}
+        {formattedContent}
       </SyntaxHighlighter>
     </div>
   );
 };
-
-// 标题组件类型
-interface HeadingProps {
-  children?: React.ReactNode;
-  node?: any;
-}
-
-// 段落组件类型
-interface ParagraphProps {
-  children?: React.ReactNode;
-  node?: any;
-}
-
-// 列表组件类型
-interface ListProps {
-  children?: React.ReactNode;
-  ordered?: boolean;
-  node?: any;
-}
-
-// 列表项组件类型
-interface ListItemProps {
-  children?: React.ReactNode;
-  checked?: boolean | null;
-  index?: number;
-  ordered?: boolean;
-  node?: any;
-}
-
-// 链接组件类型
-interface LinkProps {
-  children?: React.ReactNode;
-  href?: string;
-  title?: string;
-  node?: any;
-}
-
-// 引用块组件类型
-interface BlockquoteProps {
-  children?: React.ReactNode;
-  node?: any;
-}
-
-// 表格相关组件类型
-interface TableProps {
-  children?: React.ReactNode;
-  node?: any;
-}
-
-interface TableHeadProps {
-  children?: React.ReactNode;
-  node?: any;
-}
-
-interface TableCellProps {
-  children?: React.ReactNode;
-  isHeader?: boolean;
-  node?: any;
-}
-
-// 其他组件类型
-interface HrProps {
-  node?: any;
-}
-
-interface EmphasisProps {
-  children?: React.ReactNode;
-  node?: any;
-}
-
-interface StrongProps {
-  children?: React.ReactNode;
-  node?: any;
-}
-
-interface DeleteProps {
-  children?: React.ReactNode;
-  node?: any;
-}
-
-interface InputProps {
-  checked?: boolean;
-  type?: string;
-  node?: any;
-}
 
 // 自定义组件映射
 const components: Components = {
