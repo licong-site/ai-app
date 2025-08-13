@@ -1,9 +1,9 @@
 import { APIError, SendMessageRequest, SendMessageResponse } from "../types";
 
 // https://ai-service.licongcong-ok.workers.dev/
-// http://api.lcif2025.cc/
+// https://api.lcif2025.cc/
 // http://localhost:8787
-const API_URL = 'http://api.lcif2025.cc/';
+const API_URL = 'https://api.lcif2025.cc/';
 
 export const sendMessageToAPI = async (message: string) => {
   const requestBody: SendMessageRequest = {
@@ -16,7 +16,6 @@ export const sendMessageToAPI = async (message: string) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      // 'Authorization': 'Bearer YOUR_API_KEY', // 如需要
     },
     body: JSON.stringify(requestBody),
   });
