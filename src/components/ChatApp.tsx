@@ -4,10 +4,15 @@ import {
   Message, 
   ButtonProps, 
   ScrollAreaProps, 
+  APIError,
+  SendMessageRequest,
+  SendMessageResponse,
   ButtonSize,
   ButtonVariant 
 } from '../types';
-import { sendMessage } from '../service';
+
+// 导入API函数
+import { sendMessageToAPI } from '../utils/api';
 
 // UI Components
 const Button: React.FC<ButtonProps> = ({ 
@@ -128,35 +133,6 @@ const ErrorBanner: React.FC<ErrorBannerProps> = ({ error, errorType, onDismiss }
       </div>
     </div>
   );
-};
-
-// API Functions
-const sendMessageToAPI = async (message: string): Promise<string> => {
-  try {
-    const reply = await sendMessage(message);
-    return reply;
-  } catch (error) {
-    console.error('API调用失败:', error);
-    
-    // 如果是 APIError，直接抛出
-    if (error instanceof Error && 'errorType' in error) {
-      throw error;
-    }
-    
-    // 模拟API调用（演示用）- 生产环境中应该移除
-    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
-    
-    const responses: string[] = [
-      "这是一个很有趣的问题！让我来为你详细解答...",
-      "根据我的理解，我认为这个问题可以从几个角度来看：",
-      "感谢你的提问。基于现有信息，我建议...",
-      "这确实是一个值得探讨的话题。从我的角度来看...",
-      "我理解你的疑问。让我尝试用更简单的方式来解释..."
-    ];
-    
-    return responses[Math.floor(Math.random() * responses.length)] + 
-           " " + "这里是AI助手的详细回复内容，会根据你的具体问题提供相应的帮助和建议。";
-  }
 };
 
 // 消息组件
