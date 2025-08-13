@@ -63,7 +63,7 @@ export const detectLanguage = (className?: string): string => {
   if (!className) return '';
   
   const match = /language-(\w+)/.exec(className);
-  return match ? match[1] : '';
+  return match?.[1] || '';
 };
 
 /**

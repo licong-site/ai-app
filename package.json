@@ -10,6 +10,7 @@
     "@types/node": "^16.11.45",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
+    "@types/mdast": "^4.0.4",
     "lucide-react": "^0.263.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -25,11 +26,6 @@
   },
   "devDependencies": {
     "@types/react-syntax-highlighter": "^15.5.0",
-    "@types/react-markdown": "^8.0.7",
-    "@types/remark-gfm": "^3.0.0",
-    "@types/remark-breaks": "^2.0.0",
-    "@types/rehype-raw": "^6.0.2",
-    "@types/rehype-highlight": "^6.0.0",
     "autoprefixer": "^10.4.7",
     "postcss": "^8.4.14",
     "tailwindcss": "^3.1.6"
