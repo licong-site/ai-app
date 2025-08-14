@@ -1,22 +1,13 @@
 import { GraphQLClient, request } from 'graphql-request';
 import { 
   SEND_MESSAGE_MUTATION, 
-  HEALTH_QUERY, 
-  API_CONFIG_QUERY,
   SendMessageInput,
   ChatResponse,
-  HealthStatus,
-  APIConfig,
   ResponseStatus,
 } from '../types/graphql';
-import { APIError } from '../types';
+import { APIError } from '../types';   
 
-// API 配置
-const isDevelopment = process.env.NODE_ENV === 'development';
-const API_BASE_URL = '/api/graphql'
-// const API_BASE_URL = isDevelopment 
-//   ? 'https://ai-service.licongcong-ok.workers.dev/graphql'  // 开发环境
-//   : '/api/graphql';                                          // 生产环境
+const API_BASE_URL = 'https://ai-service.licongcong-ok.workers.dev/chat'
 
 // 创建 GraphQL 客户端
 const graphQLClient = new GraphQLClient(API_BASE_URL, {
@@ -103,40 +94,6 @@ export const sendMessageToGraphQLAPI = async (message: string): Promise<string> 
 };
 
 /**
- * 健康检查 API (GraphQL)
- * @returns Promise<boolean> API 是否可用
- */
-export const checkGraphQLAPIHealth = async (): Promise<boolean> => {
-  try {
-    const response = await request<{ health: HealthStatus }>(
-      API_BASE_URL,
-      HEALTH_QUERY
-    );
-    
-    return response.health.status === 'OK';
-  } catch {
-    return false;
-  }
-};
-
-/**
- * 获取 API 配置信息 (GraphQL)
- */
-export const getGraphQLAPIConfig = async (): Promise<APIConfig> => {
-  try {
-    const response = await request<{ apiConfig: APIConfig }>(
-      API_BASE_URL,
-      API_CONFIG_QUERY
-    );
-    
-    return response.apiConfig;
-  } catch (error) {
-    console.error('获取 API 配置失败:', error);
-    throw error;
-  }
-};
-
-/**
  * 使用 GraphQL 客户端实例发送复杂查询
  * 适用于需要自定义 headers 或其他配置的场景
  */
@@ -188,15 +145,4 @@ export const sendMessageWithClient = async (
     
     throw error;
   }
-};
-
-/**
- * 获取 GraphQL 客户端配置信息（用于调试）
- */
-export const getGraphQLClientConfig = () => {
-  return {
-    endpoint: API_BASE_URL,
-    isDevelopment,
-    timestamp: new Date().toISOString(),
-  };
 };
