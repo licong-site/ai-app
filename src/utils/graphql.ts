@@ -8,15 +8,15 @@ import {
   HealthStatus,
   APIConfig,
   ResponseStatus,
-  ChatRole
 } from '../types/graphql';
 import { APIError } from '../types';
 
 // API 配置
 const isDevelopment = process.env.NODE_ENV === 'development';
-const API_BASE_URL = isDevelopment 
-  ? 'https://ai-service.licongcong-ok.workers.dev/graphql'  // 开发环境
-  : '/api/graphql';                                          // 生产环境
+const API_BASE_URL = '/api/graphql'
+// const API_BASE_URL = isDevelopment 
+//   ? 'https://ai-service.licongcong-ok.workers.dev/graphql'  // 开发环境
+//   : '/api/graphql';                                          // 生产环境
 
 // 创建 GraphQL 客户端
 const graphQLClient = new GraphQLClient(API_BASE_URL, {
