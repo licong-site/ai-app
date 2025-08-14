@@ -1,6 +1,6 @@
 {
   "name": "ai-app",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "proxy": "https://ai-service.licongcong-ok.workers.dev",
   "dependencies": {
@@ -12,6 +12,8 @@
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "@types/mdast": "^4.0.4",
+    "graphql": "^16.8.1",
+    "graphql-request": "^7.0.1",
     "lucide-react": "^0.263.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
